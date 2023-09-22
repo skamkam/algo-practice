@@ -19,7 +19,6 @@ def random_array(size: int):    # for testing; creates given size arr of rand nu
     return L
 
 # Problem 1(a): SWAP (COPY)
-
 def swapcopy(arr, pos1, pos2):      # this is O(n) because have to copy the whole array
     copyarr = new_array(len(arr))   # create new array the size of old arr
     for i in range(len(arr)):
@@ -32,7 +31,6 @@ def swapcopy(arr, pos1, pos2):      # this is O(n) because have to copy the whol
     return copyarr
 
 # Problem 1(b): SWAP (IN PLACE)
-
 def swapinplace(arr, pos1, pos2):   # this is O(1)
     temp = arr[pos1]
     arr[pos1] = arr[pos2]     # perform the swaps
@@ -40,7 +38,6 @@ def swapinplace(arr, pos1, pos2):   # this is O(1)
     return arr
 
 # Problem 2: SUM OF FIRST n INTEGERS
-
 def gaussiansum(n):     # O(1)
     return n * (n-1) / 2
 
@@ -51,6 +48,30 @@ def sumfirstnnums(n):   # O(n)
     return ans
 
 #Problem 3: SUM OF ARRAY OF NUMBERS
+def sumarray(a):
+    ans = 0
+    for n in a:
+        ans += n
+    return ans
+
+# Problem 4: MAX VALUE OF ARRAY OF NUMBERS
+def maxarray(a):
+    max = a[0]
+    for n in a:
+        if n > max:
+            max = n
+    return max
+
+# Problem 5: POSITION OF MIN VALUE OF ARRAY OF NUMBERS
+def minpos(a):
+    min_pos = 0
+    for i in range(len(a)):
+        if a[i] < a[min_pos]:
+            min_pos = i
+    return min_pos
+
+
+# MAIN
 
 def main():
     # Creates the first n numbers in the Fibonacci sequence.
@@ -68,6 +89,9 @@ def main():
     randlist = random_array(100)
     print(swapcopy(randlist, 2, 4))
     print(swapinplace(randlist, 2,4))
+
+    print(minpos([10,20,4,3,5,10]))
+
     
    
     

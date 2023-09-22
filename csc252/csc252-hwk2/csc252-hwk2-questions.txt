@@ -27,12 +27,30 @@ Output: value of 1+2+...+n
     calculate n(n-1) / 2 <- Thanks Gauss!
 
 Problem 3: SUM OF ARRAY OF NUMBERS - Pseudocode 
-
+Input: array a of n numbers
+Output: value of a1 + a2 + ... + an
+    create variable ans = 0
+    iterate over array a
+        add every number in a to ans
+    return ans
 
 Problem 4: MAX VALUE OF ARRAY OF NUMBERS - Pseudocode 
+Input: array a of n numbers
+Output: value of the maximum element in a
+    create variable max = a[0]
+    iterate over array a
+        if number in array is bigger than max
+            set max equal to that number
+    return max
 
-
-Problem 5: POSITION OF MAX VALUE OF ARRAY OF NUMBERS - Pseudocode 
+Problem 5: POSITION OF MIN VALUE OF ARRAY OF NUMBERS - Pseudocode 
+Input: array a of n numbers
+Output: position in a where the minimum value is located
+    create variable min_pos = 0 (set to first value)
+    iterate over array a (indexing)
+        if number in array is smaller than min
+            set min_pos equal to that number's position
+    return min_pos
 
 
 Problem 6(a): SORT EVEN AND ODD NUMBERS (ARRAY) - Pseudocode 
