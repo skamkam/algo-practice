@@ -1,2 +1,2 @@
-# csc252-algorithms
-Practice code for CSC252 algorithms
+# algorithms practice
+Practice code for interview prep - leetcode, CSC252 algorithms
