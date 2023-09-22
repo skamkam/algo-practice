@@ -1,0 +1,104 @@
+Name:  Sarah Kam <br>
+Peers:  ``N/A'' <br>
+References:  - URL of resources used <br>
+
+### Pseudocode 
+
+Problem 1(a): SWAP (COPY) - Pseudocode 
+Input: an array and two positions 
+Output: array where the two elements at the two given positions are swapped, output is a new array
+    create a new array the size of the given array (using len(array))
+    iterate over the given array
+        if the position is pos1, copy val2 (from arr[pos2]) into the new array
+        if the position is pos2, copy val1 (from arr[pos1]) into the new array
+        else copy the same element over to the new array
+    return new array
+
+Problem 1(b): SWAP (IN-PLACE) - Pseudocode 
+Input: an array and two positions 
+Output: array where the two elements at the two given positions are swapped, output is the same array, but modified
+    save the value of the first position
+    define array of first position = arr of second position
+    arr of second position = saved value from first position
+
+Problem 2: SUM OF FIRST n INTEGERS - Pseudocode  
+Input: integer n
+Output: value of 1+2+...+n
+    calculate n(n-1) / 2 <- Thanks Gauss!
+
+Problem 3: SUM OF ARRAY OF NUMBERS - Pseudocode 
+
+
+Problem 4: MAX VALUE OF ARRAY OF NUMBERS - Pseudocode 
+
+
+Problem 5: POSITION OF MAX VALUE OF ARRAY OF NUMBERS - Pseudocode 
+
+
+Problem 6(a): SORT EVEN AND ODD NUMBERS (ARRAY) - Pseudocode 
+
+
+Problem 6(b): SORT EVEN AND ODD NUMBERS (LIST) - Pseudocode 
+
+
+Problem 7: MERGE TWO ARRAYS - Pseudocode 
+
+
+Problem 8: FIND A NUMBER - Pseudocode 
+
+
+Problem 9: INSERT
+
+
+### Question Answers
+
+Q1. What is the complexity of each swap? Compare and contrast (a) and (b).
+
+        The complexity of the copy swap is O(n) because we need to iterate over the entire
+    array once to copy it. It takes up the space of 2 arrays (the input and the copied
+    array) because we are copying the array over.
+
+        The complexity of the swap in place is O(1) because we are only using the two
+    positions where we want to swap, not iterating over the array. It takes up the space
+    of 1 array (the input) plus 1 integer (also O(1)) to save the temporary value.
+
+        Swapping in place is better for arrays because of the instant access; we aren't
+    inserting or deleting values that would mean the array has to change size (which would
+    be O(n)).
+
+
+Q2. Does the complexity of the swap algorithm change if the input is a list instead of an array?
+
+        The complexity of the copy swap does not change because we would still have to iterate
+    over the list once; similarly it would take up the same amount of space.
+
+        The complexity of the swap in place would become O(n) because we would need to iterate
+    over the linked list in order to find the positions we are swapping. This would still only
+    take up the space of 1 array and 1 integer.
+
+
+Q3. What is the complexity of your algorithm?
+
+        The complexity of my algorithm is O(1) because it just calculates the sum of the first
+    n numbers using the formula n(n-1)/2. It takes up the space of 1 integer, n, and the space
+    needed to calculate that formula.
+
+
+Q4. Think of a second (better or worse) algorithm.
+    Explain it and compare the complexity to your algorithm.
+
+        My second algorithm iterates from [0, n+1), and it is O(n) because it iterates over a
+    linear amount of items. It takes up the space of one array of n length and one integer for ans.
+
+
+Q5. 
+
+Q6. 
+
+Q7. 
+
+Q8.
+
+Q9. 
+
+Q10.
