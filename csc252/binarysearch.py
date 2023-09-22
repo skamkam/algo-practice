@@ -1,3 +1,8 @@
+"""
+09/13/2023 in-class exercise
+Binary search
+"""
+
 def binary_search(arr, item):
     low = 0
     high = len(arr) - 1
