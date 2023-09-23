@@ -1,6 +1,6 @@
-Name:  Sarah Kam <br>
-Peers:  ``N/A'' <br>
-References:  - URL of resources used <br>
+Name:  Sarah Kam
+Peers:  N/A
+References:  N/A
 
 ### Pseudocode 
 
@@ -24,7 +24,7 @@ Output: array where the two elements at the two given positions are swapped, out
 Problem 2: SUM OF FIRST n INTEGERS - Pseudocode  
 Input: integer n
 Output: value of 1+2+...+n
-    calculate n(n-1) / 2 <- Thanks Gauss!
+    calculate n(n+1) / 2 <- Thanks Gauss!
 
 Problem 3: SUM OF ARRAY OF NUMBERS - Pseudocode 
 Input: array a of n numbers

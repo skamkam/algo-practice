@@ -39,7 +39,7 @@ def swapinplace(arr, pos1, pos2):   # this is O(1)
 
 # Problem 2: SUM OF FIRST n INTEGERS
 def gaussiansum(n):     # O(1)
-    return n * (n-1) / 2
+    return n * (n+1) // 2   # it will always be even bc one of n or n-1 must be even
 
 def sumfirstnnums(n):   # O(n)
     ans = 0
@@ -80,7 +80,7 @@ def evenoddarr(a):
         if val % 2 == 0:    # even
             even[even_ptr] = val
             even_ptr += 1
-        else:               # odd
+        elif val % 2 == 1:  # odd
             odd[odd_ptr] = val
             odd_ptr += 1
     
@@ -101,7 +101,7 @@ def evenoddlist(a):
     for val in a:
         if val % 2 == 0:    # even
             even.append(val)
-        else:
+        elif val % 2 == 1:  # odd
             odd.append(val)
     return even, odd
 
@@ -138,34 +138,151 @@ def insert(arr, x):
 # MAIN
 
 def main():
-    # Creates the first n numbers in the Fibonacci sequence.
-    n = 10      # Try for numbers up to 100000. 
-    start_time_create = time.time()    # Get start Time.
-    M = new_array(n)
-    M[0] = 1
-    M[1] = 1
-    for j in range(2, len(M)):
-        M[j] = M[j-1] + M[j-2]
-    end_time_create = time.time()      # Get end Time.   
-    print("%s seconds to create %d number of the Fibonacci sequence" % ((end_time_create - start_time_create),n))    
+    starttime = time.time()
+
+    # Test arrays
+    n10 = random_array(10)
+    n100 = random_array(100)
+    n1000 = random_array(1000)
+    print(n10)
+    print(n100)
+    print(n1000)
     
+    # Testing Problem 1(a): Swap (copy)
+    test1a = False
+    if test1a == True:
+        print(swapcopy(n10, 0, 1))      # Success; swaps 0th and 1st index
+        print(swapcopy(n100, 0, 1))     # Success
+        print(swapcopy(n1000, 0, 1))    # Success
+        print(swapcopy(n10, 0, -1))     # Failure - inputs should be btwn 0 and n-1 for size n array
+                                        # In this case, copies the last char into first pos and not vice versa
+        # print(swapcopy(n10, 100,0))     # Failure - same as prev
+        # print(swapcopy(10, 0, 1))       # Failure - not an array
+        print(swapcopy(n10, 0, 0))      # Success - does nothing
 
-    randlist = random_array(100)
-    print(swapcopy(randlist, 2, 4))
-    print(swapinplace(randlist, 2,4))
+    # Testing Problem 1(b): Swap (in place)
+    test1b = False
+    if test1b == True:
+        print(swapinplace(n1000, 0, 1))     # Success
+        print(swapinplace(n100, 0, 1))      # Success
+        print(swapinplace(n10, 0, -1))      # Success! This swap is robust enough to stand up
+                                            # to negative indexing
+        # print(swapinplace(n100, 99, 100))   # Failure - list index out of range
+        print(swapinplace(n10, 0, 0))       # Success - does nothing
 
-    print(minpos([10,20,4,3,5,10]))
+    # Testing Problem 2: Sum first n numbers
+    test2 = False
+    if test2 == True:
+        print(gaussiansum(10))      # Success
+        print(gaussiansum(100))     # Success
+        print(gaussiansum(1000))    # Success
+        print(gaussiansum(0))       # Success
+        print(gaussiansum(-10))     # Failure - adds up as if it's all the positive numbers
+        print(gaussiansum(0.5))     # Failure - only works w/ integers
 
-    print(evenoddarr([0, 1,2,3,4,5,6,7,99,98,99,100]))
-    print(evenoddlist([0, 1,2,3,4,5,6,7,99,98,99,100]))
+        print(sumfirstnnums(10))    # Success
+        print(sumfirstnnums(100))   # Success
+        print(sumfirstnnums(1000))  # Success
+        print(sumfirstnnums(0))     # Success
+        print(sumfirstnnums(-10))   # Failure - loop doesn't happen so returns 0
+        #print(sumfirstnnums(0.5))   # Failure - can't iterate over floats
 
-    print(mergearr([0,1,2,3],[4,3,4,3,5,6]))
+    # Testing Problem 3: Sum of array of numbers
+    test3 = False
+    if test3 == True:
+        print(sumarray(n10))        # Success (checked with online calculator)
+        print(sumarray(n100))       # Success (checked with online calculator)
+        print(sumarray(n1000))      # Success (checked with online calculator)
+        print(sumarray([-1, 1, -2, 2]))  # Success
+        print(sumarray([-1, -3, -7, -99]))   # Success
+        print(sumarray([0.5, 1.3, 9.02]))   # Success
+        print(sumarray([]))         # Success
+        #print(sumarray(100))        # Failure - can't iterate over loop
 
-    print(insert([0,1,2,3,5,8], 13))
+    # Testing Problem 4: Max value of array of numbers
+    test4 = False
+    if test4 == True:
+        print(maxarray(n10))        # Success - checked with online calculator
+        print(maxarray(n100))       # Success - checked with online calculator
+        print(maxarray(n1000))      # Success - checked with online calculator
+        print(maxarray([-1,-2,-3,-4,-5]))   # Success
+        print(maxarray([0,0,0,0]))          # Success
+        print(maxarray([0.5,1.3,9.02]))     # Success
+        #print(maxarray([]))         # Failure - by default sets max to a[0], but there is no a[0]
 
+    # Testing Problem 5: Position of min value of array of numbers
+    test5 = False
+    if test5 == True:
+        # Note: minpos returns the first occurrence of a minimum value
+        print(minpos(n10))              # Success - eyeballed
+        print(minpos(n100))             # Success - eyeballed
+        print(minpos(n1000))            # Success - eyeballed
+        print(minpos([]))               # Failure - default returns 0 but there is no 0
+        print(minpos([-1,-2,-3,-4]))    # Success
+        print(minpos([0,0,0]))          # Success - returns 0 (first pos)
+        print(minpos([0.5,0.4,0.3]))    # Success
+
+    # Testing Problem 6(a): Sort even and odd numbers (array)
+    test6a = False
+    if test6a == True:
+        print(evenoddarr(n10))              # Success - eyeballed
+        print(evenoddarr(n100))             # Success - eyeballed
+        print(evenoddarr(n1000))            # Success - eyeballed
+        print(evenoddarr([0,2,4]))          # Success - creates an empty list for odd
+        print(evenoddarr([]))               # Success - creates 2 empty lists
+        print(evenoddarr([-1,-2,-3,-4]))    # Success
+        print(evenoddarr([0.1,0.2,0.3]))    # Success - none of these decimals are even or odd so 2 empty lists
     
-   
+    # Testing Problem 6(b): Sort even and odd numbers (list)
+    test6b = False
+    if test6b == True:
+        print(evenoddlist(n10))              # Success - eyeballed
+        print(evenoddlist(n100))             # Success - eyeballed
+        print(evenoddlist(n1000))            # Success - eyeballed
+        print(evenoddlist([0,2,4]))          # Success - creates an empty list for odd
+        print(evenoddlist([]))               # Success - creates 2 empty lists
+        print(evenoddlist([-1,-2,-3,-4]))    # Success
+        print(evenoddlist([0.1,0.2,0.3]))    # Success - none of these decimals are even or odd so 2 empty lists
     
+    # Testing Problem 7: Merge two arrays
+    test7 = False
+    if test7 == True:
+        n5 = random_array(5)
+        print(str(n5) + "\n")
+        print(mergearr(n10,n5))         # Success
+        print(mergearr(n100,n5))        # Success
+        print(mergearr(n1000,n5))       # Success
+        print(mergearr([1,2,3],[]))     # Success
+        print(mergearr([],[1,2,3]))     # Success
+        print(mergearr([],[]))          # Success
+        print(mergearr([0.1,0.2,0.3],[1,2,3]))  # Success
+        print(mergearr(["a", "b", "c"], [1,2,3]))   # Success but only bc this is Python lol
+        #print(mergearr(10,200))        # Failure - bad input
+
+    # Testing Problem 8: Find a number
+    test8 = False
+    if test8 == True:
+        print(findnum(n10, 0))          # Success - eyeballed
+        print(findnum(n100, 0))         # Success
+        print(findnum(n1000, 0))        # Success
+        print(findnum(n10, 100))        # Success - was not found
+        print(findnum([], 0))           # Success - was not found
+        print(findnum([1,2,3], 0.5))    # Success - was not found
+        print(findnum([0.1,0.1], 0.1))  # Success
+
+    # Testing Problem 9: Insert a number into an unsorted array
+    test9 = False
+    if test9 == True:
+        print(insert(n10, 1000))        # Success
+        print(insert(n100, 1000))       # Success
+        print(insert(n1000, 1000))      # Success
+        print(insert([], 1000))         # Success
+        print(insert([0,0], 0))         # Success
+        print(insert([-1.5,-2], 0.5))   # Success
+
+    print("Tests completed in " + str(time.time() - starttime) + " seconds.")
+
+
 
 if __name__ == "__main__":    
     main()
