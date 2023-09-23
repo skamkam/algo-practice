@@ -70,6 +70,59 @@ def minpos(a):
             min_pos = i
     return min_pos
 
+# Problem 6(a): SORT EVEN AND ODD NUMBERS (ARRAY)
+def evenoddarr(a):
+    even = [0] * len(a)
+    odd = [0] * len(a)
+    even_ptr = 0
+    odd_ptr = 0
+    for val in a:
+        if val % 2 == 0:    # even
+            even[even_ptr] = val
+            even_ptr += 1
+        else:               # odd
+            odd[odd_ptr] = val
+            odd_ptr += 1
+    
+    final_even = [0] * even_ptr     # counts # even nums via even_ptr
+    for i in range(even_ptr):
+        final_even[i] = even[i]     # copy the even number over to final_even
+    
+    final_odd = [0] * odd_ptr       # counts # odd nums via odd_ptr
+    for i in range(odd_ptr):
+        final_odd[i] = odd[i]
+    
+    return final_even, final_odd
+
+# Problem 6(b): SORT EVEN AND ODD NUMBERS (LIST)
+def evenoddlist(a):
+    even = []
+    odd = []
+    for val in a:
+        if val % 2 == 0:    # even
+            even.append(val)
+        else:
+            odd.append(val)
+    return even, odd
+
+# Problem 7: MERGE TWO ARRAYS
+def mergearr(a, b):
+    size_a = len(a)
+    size_b = len(b)
+    final_size = size_a + size_b
+    arr = [0] * final_size
+    for i in range(size_a):
+        arr[i] = a[i]
+    for i in range(size_b):
+        arr[i + size_a] = b[i]      # fill in the remaining spaces in arr w/ b's values
+    return arr
+
+# Problem 8: FIND A NUMBER
+def findnum(arr, x):
+    for val in arr:
+        if val == x:
+            return True
+    return False
 
 # MAIN
 
@@ -91,6 +144,11 @@ def main():
     print(swapinplace(randlist, 2,4))
 
     print(minpos([10,20,4,3,5,10]))
+
+    print(evenoddarr([0, 1,2,3,4,5,6,7,99,98,99,100]))
+    print(evenoddlist([0, 1,2,3,4,5,6,7,99,98,99,100]))
+
+    print(mergearr([0,1,2,3],[4,3,4,3,5,6]))
 
     
    

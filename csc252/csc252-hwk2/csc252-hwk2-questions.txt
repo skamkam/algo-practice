@@ -54,16 +54,66 @@ Output: position in a where the minimum value is located
 
 
 Problem 6(a): SORT EVEN AND ODD NUMBERS (ARRAY) - Pseudocode 
+Input: array a of n numbers
+Output: two arrays even and odd
+    The difficulty is that we don't know how many numbers are even
+    and how many are odd -> creating arrays big enough will be a pain
+    Maybe we can create two arrays the same size as input?
+    but would need a placeholder number and 0 is even and -1 is odd...
+    Create a pointer that measures how big the even/odd arrs are, cut it off after
+
+    create even and odd arrays the size of input array
+    create even and odd pointers equal to 0
+    for value in input array:
+        if value % 2 = 0: # even
+            even[even pointer] = value
+            even pointer ++
+        if value %2 = 1:
+            odd[odd pointer] = value
+            odd pointer ++
+    # then copy the even/odd arrays up to the pointer value and return them
+    # Can you do array splicing with [0:even pointer]? If so, just return even[0:even pointer]
+    final_even = [0] * even pointer (size)
+    for idx in range final_even:
+        final_even[idx] = even[idx]
+    final_odd = [0] * odd pointer (size)
+    for idx in range final_odd:
+        final_odd[idx] = odd[idx]
+    return final_even, final_odd
 
 
 Problem 6(b): SORT EVEN AND ODD NUMBERS (LIST) - Pseudocode 
-
+Input: array a of n numbers
+Output: two lists even and odd
+    even = []
+    odd = []
+    for val in input array:
+        if val is even:
+            even.append(val)
+        else:
+            odd.append(val)
+    return even, odd
 
 Problem 7: MERGE TWO ARRAYS - Pseudocode 
-
+Input: two arrays a and b of m and n number
+Output: array c of (m+n) numbers
+    final_size = size of a plus size of b (aka, m+n)
+    size of a variable
+    create array the size of final_size
+    loop over length of a
+        array[i] = a[i]
+    loop over length of b
+        array[i+size of a] = b[i]
+    return array
+    
 
 Problem 8: FIND A NUMBER - Pseudocode 
-
+Input: unsorted array a of n numbers and a number x
+Output: return true iff x exists in a
+    iterate over a
+    if val in a == number x
+        return true
+    at the end of loop, return false
 
 Problem 9: INSERT
 
@@ -73,16 +123,15 @@ Problem 9: INSERT
 Q1. What is the complexity of each swap? Compare and contrast (a) and (b).
 
         The complexity of the copy swap is O(n) because we need to iterate over the entire
-    array once to copy it. It takes up the space of 2 arrays (the input and the copied
-    array) because we are copying the array over.
+    array once to copy it. It takes up the space of O(n) (the input and the copied
+    array are both size n) because we are copying the array over.
 
         The complexity of the swap in place is O(1) because we are only using the two
     positions where we want to swap, not iterating over the array. It takes up the space
-    of 1 array (the input) plus 1 integer (also O(1)) to save the temporary value.
+    of O(n) because the array is size n.
 
-        Swapping in place is better for arrays because of the instant access; we aren't
-    inserting or deleting values that would mean the array has to change size (which would
-    be O(n)).
+        Swapping in place is better for arrays because of the instant access and no need
+    to insert/delete entries, which would require copying over the entire array each time.
 
 
 Q2. Does the complexity of the swap algorithm change if the input is a list instead of an array?
@@ -91,32 +140,69 @@ Q2. Does the complexity of the swap algorithm change if the input is a list inst
     over the list once; similarly it would take up the same amount of space.
 
         The complexity of the swap in place would become O(n) because we would need to iterate
-    over the linked list in order to find the positions we are swapping. This would still only
-    take up the space of 1 array and 1 integer.
+    over the linked list in order to find the positions we are swapping. This would still take
+    up the space of O(n).
 
 
 Q3. What is the complexity of your algorithm?
 
         The complexity of my algorithm is O(1) because it just calculates the sum of the first
-    n numbers using the formula n(n-1)/2. It takes up the space of 1 integer, n, and the space
-    needed to calculate that formula.
+    n numbers using the formula n(n-1)/2. It takes up the space of O(1) because it uses one
+    integer variable, which is O(1).
 
 
 Q4. Think of a second (better or worse) algorithm.
     Explain it and compare the complexity to your algorithm.
 
         My second algorithm iterates from [0, n+1), and it is O(n) because it iterates over a
-    linear amount of items. It takes up the space of one array of n length and one integer for ans.
+    linear amount of items. It takes up the space of O(n) as well, for the iteration from 0 to n.
 
 
-Q5. 
+Q5. Compare and contrast the complexity of Problems 3-5.
 
-Q6. 
+        All three of the problems - summing an array, finding the maximum of an array, and finding
+    the minimum of an array - have time complexity O(n), because we need to iterate over the
+    array once in order to add everything up or find the largest/smallest number. They all have
+    space complexity O(n) as well, because the initial array is O(n) and the only variables we
+    use are integers, which are O(1) and can be disregarded.
 
-Q7. 
+Q6. What is the complexity of each sort? Compare and contrast (a) and (b).
 
-Q8.
+        Both the array sort and the list sort have time complexity O(n), because they require
+    iterating over the input array of size n some number of times. Within this O(n), the
+    array sort is more inefficient, having to iterate over the lists more times.
 
-Q9. 
+        They both have space complexity O(n) as well; however, the array sort takes up more
+    space than the list sort within that O(n). The array sort requires creating two arrays
+    which are O(n) each in addition to the two final sorted arrays. The list sort only
+    needs the two final sorted arrays.
+
+
+Q7. Is this problem better suited to arrays or lists? Why? How does this distinction
+    affect the complexity of the solution?
+
+        This problem is better suited to arrays, since we know exactly how long the final
+    array should be (the size of a plus the size of b). If we implemented it using lists,
+    it would take the same time and space complexity if we assume appending items is O(1)
+    (i.e, there might be a pointer at the end of the list that makes it easy to append
+    rather than having to iterate over the list every time we append something), but if
+    appending items was O(n), then with lists this problem would have O(n^2) complexity.
+        
+        Space-wise, both arrays and lists would take up the same amount of space, with one
+    final array of size m+n and two input lists of size m and n respectively, making both
+    versions have space-complexity of O(n).
+
+
+Q8. What is the complexity of your algorithm?
+
+        My algorithm has time complexity O(n), since we need to iterate over the entire array
+    of size n and check every number to find whether or not the given value is in the array. The
+    algorithm's space complexity is O(n) for the initial array; we don't use any other variables.
+
+Q9. Is it more efficient (i.e., complexity) to sort the array first before finding the
+    number? Does your answer depend on what approach you use to sort? What other
+    factors might influence this decision?
+
+
 
 Q10.
