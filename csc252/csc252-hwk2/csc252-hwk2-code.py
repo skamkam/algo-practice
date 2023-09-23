@@ -124,6 +124,17 @@ def findnum(arr, x):
             return True
     return False
 
+
+# Problem 9: INSERT
+def insert(arr, x):
+    n = len(arr)
+    ans = [0] * (n + 1)
+    # ans[i] = [arr[i] for i in arr] i think this syntax only works for lists & we're faking an arr
+    for i in range(n):
+        ans[i] = arr[i]
+    ans[-1] = x
+    return ans
+
 # MAIN
 
 def main():
@@ -149,6 +160,8 @@ def main():
     print(evenoddlist([0, 1,2,3,4,5,6,7,99,98,99,100]))
 
     print(mergearr([0,1,2,3],[4,3,4,3,5,6]))
+
+    print(insert([0,1,2,3,5,8], 13))
 
     
    

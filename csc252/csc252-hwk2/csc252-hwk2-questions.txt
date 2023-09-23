@@ -116,6 +116,11 @@ Output: return true iff x exists in a
     at the end of loop, return false
 
 Problem 9: INSERT
+Input: array a of n numbers and a number x
+Output: array a of (n+1) numbers
+    create an empty array of size n+1
+    iterate over array a and copy all elts 1 for 1 into the new array
+    make the last element be number x
 
 
 ### Question Answers
@@ -203,6 +208,29 @@ Q9. Is it more efficient (i.e., complexity) to sort the array first before findi
     number? Does your answer depend on what approach you use to sort? What other
     factors might influence this decision?
 
+        All the sorting we have learned so far is in O(n^2); since my algorithm is currently
+    O(n), it would be less efficient to sort the array first before finding the number, which
+    would elevate my algorithm to O(n^2). If there were a sorting algorithm that ran in O(n),
+    it might be worthwhile to sort first before finding the number.
+
+        If the array might need to be sorted to make other things easier as well, such as
+    printing a numerical list of student IDs or something, then it would make sense to sort
+    first before finding the maximum number in the array.
 
 
-Q10.
+Q10. What is the complexity of this insert? Does the complexity of the insert algorithm
+     change if the input is a list instead of an array?
+
+        The time complexity of this insert is O(n), because we have to iterate over the
+    whole array to create a copy of it in order to insert one new element. This is because
+    an array's size is immutable, so we have to make a new copy.
+
+        If the input were a list, the time complexity would be O(1), assuming we could instantly
+    find the insertion place, because we'd just have to add one entry somewhere in memory
+    and redirect the pointers of the previous/next nodes to point at that node. If we don't
+    care where the new number is inserted, we can just stick it to the beginning/end, assuming
+    we have pointers that know where the beginning/end of the list are. However, if we needed
+    to iterate over the list to find a spot to insert the element, this would still be O(n) time.
+
+        The space complexity of inserts with both arrays and lists would be O(n), since we are
+    considering the entire input which is size n.
