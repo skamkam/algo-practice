@@ -25,7 +25,4 @@ Then go back to the pile (step 1)
 -> 3) if find a key, done
 
 Downside of recursion: hard to keep track of what boxes have been opened so far!
-
-
-
 """
