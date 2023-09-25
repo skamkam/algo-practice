@@ -19,19 +19,27 @@ def random_array(size: int):    # for testing; creates given size arr of rand nu
     return L
 
 # Problem 1(a): SWAP (COPY)
-def swapcopy(arr, pos1, pos2):      # this is O(n) because have to copy the whole array
-    copyarr = new_array(len(arr))   # create new array the size of old arr
-    for i in range(len(arr)):
-        if i == pos1:
-            copyarr[i] = arr[pos2]
-        elif i == pos2:
-            copyarr[i] = arr[pos1]
-        else:
+def swapcopy(arr, pos1, pos2):
+    n = len(arr)
+    copyarr = new_array(n)
+    if n == 0 or pos1 >= n or pos2 >= n or pos1 < 0 or pos2 < 0:  # empty arr or bad position inputs
+        for i in range(n):
             copyarr[i] = arr[i]
+    else:       # inputs good, makes a copy with swaps
+        for i in range(n):
+            if i == pos1:
+                copyarr[i] = arr[pos2]
+            elif i == pos2:
+                copyarr[i] = arr[pos1]
+            else:
+                copyarr[i] = arr[i]
     return copyarr
 
 # Problem 1(b): SWAP (IN PLACE)
 def swapinplace(arr, pos1, pos2):   # this is O(1)
+    n = len(arr)
+    if n == 0 or pos1 >= n or pos2 >= n or pos1 < -n or pos2 < -n:  # empty arr or bad position inputs
+        return arr      # if bad input just return the same arr with no swaps
     temp = arr[pos1]
     arr[pos1] = arr[pos2]     # perform the swaps
     arr[pos2] = temp
@@ -39,9 +47,14 @@ def swapinplace(arr, pos1, pos2):   # this is O(1)
 
 # Problem 2: SUM OF FIRST n INTEGERS
 def gaussiansum(n):     # O(1)
+    if n < 0 or type(n) != int:           # if the input is negative, no first n nums
+        return None
     return n * (n+1) // 2   # it will always be even bc one of n or n-1 must be even
 
 def sumfirstnnums(n):   # O(n)
+    if n < 0 or type(n) != int:           # if the input is negative, no first n nums
+        return None
+
     ans = 0
     for i in range(n+1):
         ans += i
@@ -56,6 +69,9 @@ def sumarray(a):
 
 # Problem 4: MAX VALUE OF ARRAY OF NUMBERS
 def maxarray(a):
+    if len(a) == 0:     # if empty array, no max
+        return None
+
     max = a[0]
     for n in a:
         if n > max:
@@ -64,6 +80,9 @@ def maxarray(a):
 
 # Problem 5: POSITION OF MIN VALUE OF ARRAY OF NUMBERS
 def minpos(a):
+    if len(a) == 0:     # if the array is size 0
+        return None
+
     min_pos = 0
     for i in range(len(a)):
         if a[i] < a[min_pos]:
@@ -72,8 +91,8 @@ def minpos(a):
 
 # Problem 6(a): SORT EVEN AND ODD NUMBERS (ARRAY)
 def evenoddarr(a):
-    even = [0] * len(a)
-    odd = [0] * len(a)
+    even = new_array(a)
+    odd = new_array(a)
     even_ptr = 0
     odd_ptr = 0
     for val in a:
@@ -84,11 +103,11 @@ def evenoddarr(a):
             odd[odd_ptr] = val
             odd_ptr += 1
     
-    final_even = [0] * even_ptr     # counts # even nums via even_ptr
+    final_even = new_array(even_ptr)     # counts # even nums via even_ptr
     for i in range(even_ptr):
         final_even[i] = even[i]     # copy the even number over to final_even
     
-    final_odd = [0] * odd_ptr       # counts # odd nums via odd_ptr
+    final_odd = new_array(odd_ptr)       # counts # odd nums via odd_ptr
     for i in range(odd_ptr):
         final_odd[i] = odd[i]
     
@@ -110,7 +129,7 @@ def mergearr(a, b):
     size_a = len(a)
     size_b = len(b)
     final_size = size_a + size_b
-    arr = [0] * final_size
+    arr = new_array(final_size)
     for i in range(size_a):
         arr[i] = a[i]
     for i in range(size_b):
@@ -124,11 +143,10 @@ def findnum(arr, x):
             return True
     return False
 
-
 # Problem 9: INSERT
 def insert(arr, x):
     n = len(arr)
-    ans = [0] * (n + 1)
+    ans = new_array(n + 1)
     # ans[i] = [arr[i] for i in arr] i think this syntax only works for lists & we're faking an arr
     for i in range(n):
         ans[i] = arr[i]
@@ -144,31 +162,33 @@ def main():
     n10 = random_array(10)
     n100 = random_array(100)
     n1000 = random_array(1000)
-    print(n10)
-    print(n100)
-    print(n1000)
-    
+    #print(n10)
+    #print(n100)
+    #print(n1000)
+
+    # NOTE: Did not include failure cases where bad input (non-arrays, non-ints, etc)
+    #       would have caused a program bug. I am assuming inputs are the correct type
+    #       even if they aren't inputs that make sense in context of the problem.
+
     # Testing Problem 1(a): Swap (copy)
     test1a = False
     if test1a == True:
-        print(swapcopy(n10, 0, 1))      # Success; swaps 0th and 1st index
-        print(swapcopy(n100, 0, 1))     # Success
-        print(swapcopy(n1000, 0, 1))    # Success
-        print(swapcopy(n10, 0, -1))     # Failure - inputs should be btwn 0 and n-1 for size n array
-                                        # In this case, copies the last char into first pos and not vice versa
-        # print(swapcopy(n10, 100,0))     # Failure - same as prev
-        # print(swapcopy(10, 0, 1))       # Failure - not an array
-        print(swapcopy(n10, 0, 0))      # Success - does nothing
+        print(swapcopy(n1000, 0, 1))     # Success
+        print(swapcopy(n100, 0, 1))      # Success
+        print(swapcopy(n10, 0, -9))      # Failure - returns copy of n10 (neg index not supported for swapcopy)
+        print(swapcopy(n100, 100, 101))  # Failure - returns copy of n100 (positions out of range)
+        print(swapcopy(n10, 0, 0))       # Success
+        print(swapcopy([], 0, 1))        # Failure - returns None (bad position input)
 
     # Testing Problem 1(b): Swap (in place)
     test1b = False
     if test1b == True:
         print(swapinplace(n1000, 0, 1))     # Success
         print(swapinplace(n100, 0, 1))      # Success
-        print(swapinplace(n10, 0, -1))      # Success! This swap is robust enough to stand up
-                                            # to negative indexing
-        # print(swapinplace(n100, 99, 100))   # Failure - list index out of range
-        print(swapinplace(n10, 0, 0))       # Success - does nothing
+        print(swapinplace(n10, 0, -9))      # Success - uses negative indexing
+        print(swapinplace(n100, 99, -101))  # Failure - returns unchanged arr (positions out of range)
+        print(swapinplace(n10, 0, 0))       # Success
+        print(swapinplace([], 0, 1))        # Failure - returns unchanged arr
 
     # Testing Problem 2: Sum first n numbers
     test2 = False
@@ -177,15 +197,15 @@ def main():
         print(gaussiansum(100))     # Success
         print(gaussiansum(1000))    # Success
         print(gaussiansum(0))       # Success
-        print(gaussiansum(-10))     # Failure - adds up as if it's all the positive numbers
-        print(gaussiansum(0.5))     # Failure - only works w/ integers
+        print(gaussiansum(-10))     # Failure - returns None bc first n integers is negative
+        print(gaussiansum(0.5))     # Failure - returns None bc first n numbers doesn't make sense w/ non-integers
 
         print(sumfirstnnums(10))    # Success
         print(sumfirstnnums(100))   # Success
         print(sumfirstnnums(1000))  # Success
         print(sumfirstnnums(0))     # Success
-        print(sumfirstnnums(-10))   # Failure - loop doesn't happen so returns 0
-        #print(sumfirstnnums(0.5))   # Failure - can't iterate over floats
+        print(sumfirstnnums(-10))   # Failure - None
+        print(sumfirstnnums(0.5))   # Failure - None
 
     # Testing Problem 3: Sum of array of numbers
     test3 = False
@@ -196,8 +216,8 @@ def main():
         print(sumarray([-1, 1, -2, 2]))  # Success
         print(sumarray([-1, -3, -7, -99]))   # Success
         print(sumarray([0.5, 1.3, 9.02]))   # Success
-        print(sumarray([]))         # Success
-        #print(sumarray(100))        # Failure - can't iterate over loop
+        print(sumarray([]))         # Success - sum is 0
+        # Failure state would be trying to add non-numbers, would throw error
 
     # Testing Problem 4: Max value of array of numbers
     test4 = False
@@ -208,7 +228,7 @@ def main():
         print(maxarray([-1,-2,-3,-4,-5]))   # Success
         print(maxarray([0,0,0,0]))          # Success
         print(maxarray([0.5,1.3,9.02]))     # Success
-        #print(maxarray([]))         # Failure - by default sets max to a[0], but there is no a[0]
+        print(maxarray([]))         # Success - returns None
 
     # Testing Problem 5: Position of min value of array of numbers
     test5 = False
@@ -217,7 +237,7 @@ def main():
         print(minpos(n10))              # Success - eyeballed
         print(minpos(n100))             # Success - eyeballed
         print(minpos(n1000))            # Success - eyeballed
-        print(minpos([]))               # Failure - default returns 0 but there is no 0
+        print(minpos([]))               # Success - returns None
         print(minpos([-1,-2,-3,-4]))    # Success
         print(minpos([0,0,0]))          # Success - returns 0 (first pos)
         print(minpos([0.5,0.4,0.3]))    # Success
@@ -257,7 +277,7 @@ def main():
         print(mergearr([],[]))          # Success
         print(mergearr([0.1,0.2,0.3],[1,2,3]))  # Success
         print(mergearr(["a", "b", "c"], [1,2,3]))   # Success but only bc this is Python lol
-        #print(mergearr(10,200))        # Failure - bad input
+        # Failures would result from bad input (need two arrays)
 
     # Testing Problem 8: Find a number
     test8 = False
