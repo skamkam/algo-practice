@@ -10,8 +10,19 @@ def fibonacci(n):   # starting at 1, 2, 3, 5, ... prints the nth fib number
         return 1
     return fibonacci(n-1) + fibonacci(n-2)
 
+def iter_fibonacci(n):
+    a, b = 1, 1
+    for i in range(1,n):
+        temp = a+b
+        b = a
+        a = temp
+        print("a = " + str(a))
+        print("b = " + str(b))
+    return a
+
 print(factorial(5))
-print(fibonacci(7))
+print(fibonacci(5))
+print(iter_fibonacci(5))
 
 """
 9/25/23 notes
