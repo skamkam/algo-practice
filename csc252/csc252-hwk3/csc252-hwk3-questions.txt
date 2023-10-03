@@ -1,0 +1,344 @@
+Name:  Sarah Kam
+Peers:  N/A
+References:  Class notes on merge sort, Leetcode problem #88 (which I did on my own time)
+            Said leetcode problem: https://leetcode.com/problems/merge-sorted-array/
+
+# Problem 0: Resources for Merge sort
+
+    This is the code I used for mergeSort(). I chose merge sort because it's O(n log n)
+and the best algorithm we have for sorting thus far.
+
+def merge(lst1: list, lst2: list) -> list:      # merges two sorted list into 1 sorted list, O(n)
+    idx1 = 0
+    idx2 = 0
+    merged = []
+    while idx1 < len(lst1) and idx2 < len(lst2):    # there are still things left to compare
+        if lst1[idx1] <= lst2[idx2]:
+            merged.append(lst1[idx1])
+            idx1 += 1
+        else:
+            merged.append(lst2[idx2])
+            idx2 += 1
+    #assert idx1 == len(lst1) or idx2 == len(lst2)   # either of these must be true
+    return merged + lst1[idx1:] + lst2[idx2:]
+
+def mergeSort(lst: list) -> list:       # sorts list by splitting in half and sorting recursively, O(logn)
+    if len(lst) < 2:    # base case
+        return lst
+    else:
+        mid = len(lst) // 2     # integer division - rounds down
+        left_sorted = mergeSort(lst[:mid])
+        right_sorted = mergeSort(lst[mid:])
+        return merge(left_sorted, right_sorted)
+
+
+# Problem 1: ALL-TRUE SOME-TRUE
+
+    Note: For the recursive solutions, I assume the list is a linked list, which would allow
+slicing and recursive calls on sub-sections of the linked list. The iterative solutions should
+work on both linked lists and arrays.
+
+## (a) Given a "list" of booleans, decide if they are all-true
+
+### Iterative
+    for value in list:
+        if value is not true:       # my dad told me once never said to say if value = False...
+            return False
+    return True
+
+### Recursive
+    if len(list) is 1:
+        return list[0]
+    else:
+        return list[0] and (recursive call on list[1:])
+
+## (b) Given a "list" of booleans, decide if they are some-true
+
+### Iterative
+    for value in list:
+        if value is true:
+            return True
+    return False
+
+### Recursive
+    if len(list) is 1:
+        return list[0]
+    else:
+        return list[0] or (recursive call on list[1:])
+
+In these recursive solutions I use the "and" and "or" operators to check if every
+item is true (True and True and True = True), or if at least one item is true
+(True and False and False = True).
+
+If the question was all-false versus some-false, I would do a similar thing but
+swap the Trues and Falses in these solutions (again using "if x = not True" as
+opposed to "if x = False"). For all-false, I'd check if each value was not True,
+and if they all were, then I'd return True; for some-false, I'd check if any
+value was not True, and if any one was, then I'd return True.
+
+
+# Problem 2: REVERSE
+
+Given a ordered "list" of elements, reverse and return the list.
+Give solutions for both array and linked lists, and discuss implementation differences.
+
+### Iterative, for array and linked list
+    for i in range (length of array // 2):
+        temp = arr[i]
+        arr[i] = arr[length of arr - i - 1]
+        arr[length of arr - i - 1] = temp
+    return arr
+
+This solution works for both linked lists and arrays.
+
+### Recursive, for linked list
+    if length of list == 1:
+        return [list[0]]
+    elif length of list == 2:
+        return [list[1], list[0]]
+    else:
+        return [list[-1]] + recursive call of list[1:-2] + [list[0]]
+
+This works because of Python's support for combining lists using the + operator.
+
+### Recursive, for arrays
+    if length of arr == 1:
+        return [arr[0]]
+    else:
+        temp = arr[0]
+        arr[0] = arr[-1]
+        arr[-1] = temp
+        nextcall = recursive call on arr[1:-2]
+        for i in range(1, length of arr - 1):
+            copy each element from nextcall into the corresponding spot in arr
+        return arr
+
+We have to modify the recursive solution for arrays because arrays can't change
+size and be combined together easily; I make a new array and copy each element in
+from the recursive calls, then return that array (to the previous function call,
+which will then copy *it* into that iteration's new array, etc).
+
+
+# Problem 3: EQUALITY OF SET OR MULTISET
+
+Given two sets (or multi-sets) as "list", return if the sets (or multi-sets)
+are equal. How would you represent a set (or a multi-set) so that you can test
+equality of two sets (or two multi-sets) efficiently (i.e., run time)? Explain
+your thinking, an ideal solution is not expected.
+    
+### Iterative
+    
+I use merge sort to sort both sets. (If the inputs are already sorted then we
+skip the sorting step.) Then I compare them element by element, which is O(n),
+so overall the set comparison would be O(n log n).
+
+This solution works for both arrays and linked lists.
+
+    arr1 = mergesort(arr1)          # O(n log n)
+    arr2 = mergesort(arr2)
+    for i in range(len(arr1)):      # O(n)
+        if arr1[i] != arr2[i]:
+            return False
+    return True
+
+### Recursive
+
+I use merge sort to sort both sets. Again, if the sets are already sorted
+then we skip this step. Then I call the equality-check function on smaller
+and smaller subsections of the set.
+
+I assume the data structures used are linked lists, not arrays, which make it easier
+to do recursive calls on sub-sections of the list.
+
+    # the next several lines are done separately from the function call
+    # we only want to sort the arrays once
+    arr1 = mergesort(arr1)
+    arr2 = mergesort(arr2)
+    if len(arr1) != len(arr2):
+        return False    # lengths different, sets are not equal
+    elif len(arr1) == 0 and len(arr2) == 0:
+        return True     # two empty sets are equal
+
+    def equal_check(arr1, arr2):
+        if arr1[0] == arr2[0]:
+            if len(arr1) == 1:      # base case for if all the others were equal
+                return True
+            else:
+                return equal_check(arr1[1:], arr2[1:])      # check if the rest are also equal
+        else:
+            return False            # if any two are unequal, including base case of len 1, then return False
+
+
+# Problem 4: UNION
+
+Given two sets (as "lists"), return the union of the two sets. How does this algorithm
+change if you need to find the intersection, rather than the union?
+
+### Assumptions
+
+    I assume we're using linked lists, since that makes it easier to
+unite the two sets. Because we don't know how many "repeat" entries there will be
+that we need to remove in the union, the final set size is not determined until
+we know what the set is, so it's easier to do this problem with linked lists.
+
+This is easier to do if our two sets are sorted - I run merge sort on them both,
+which makes this solution O(n log n), but if we know that they are already sorted
+then we can adjust that into simply running a merge() on the two sorted lists,
+which is O(n). After combining and sorting the lists, we run an O(n) loop over
+the list to make sure any repeat entries have been removed, which is how union
+of two sets works.
+
+### Iterative
+
+Note: I'm using mergeSort here which is recursive, but counting that as a separate
+"operation" than the rest of the union function - we could easily treat the inputs
+as ones that have to be sorted before being passed into the function.
+
+def union(lst1, lst2):
+    # Put all of the entries into one list and sort it all
+    # This makes checking the final list for repeats a lot easier
+    union = mergeSort(lst1 + lst2)
+
+    current = last element of union
+    i = len(union)-2        (iterate from second from last to beginning)
+    while i >= 0:
+        if value at union[i] is equal to current:
+            pop that value from union
+        else:
+            set current equal to that new value ("update" what current is)
+        i -= 1
+    
+    return union
+
+For intersection, I would sort each input list separately, then perform an O(n)
+comparison where I check to see if there are any of the same numbers in each
+list by moving along the indices until the corresponding pointer is too far.
+For example, suppose we have lists a and b as follows:
+
+a: [1,2,3,5,8], with pointer A
+b: [1,3,4,7,11], with pointer B
+
+Both pointers A and B start by pointing at 1, so we add that to the final output list
+and do A++, B++. Then 2 and 3 are not the same, so we increment the pointer
+that points at the smaller value (aka, A++), and compare those new ones. Since 3 and 3
+are the same, we add 3 to the final output list and increment both pointers (A++, B++).
+Then 4 and 5 are not the same, so we increment the second pointer (B++) and compare 5 and 7;
+these are not the same, so we increment the first pointer (A++) and compare 8 and 7;
+then 8 and 11, and then A is greater than the length of list a so we stop.
+
+### Recursive
+
+I assume this solution is for linked lists as they are implemented in Python. This
+means I can use the "not in" operator, the append() function, and list slicing.
+
+    def rec_union(lst1, lst2):
+        if lst1[0] not in lst2:
+            append lst1[0] to lst2
+        if len(lst1) > 1:       # this is the non-base case: we do a recursive call
+            lst2 = rec_union(lst1[1:], lst2)    # recurs. call on the remainder of lst1
+        return lst2
+
+If I were doing this with intersection, I would create a new "output" list
+to pass into the function as well (rec_intersection(lst1, lst2, output)), and
+for each call if lst1[0] was in lst2 then I'd append lst1[0] to the output list.
+Then I would recursively call the function again if the length of lst1 was > 1,
+and pass in lst1[1:], lst2, and output. Finally I would return output.
+
+
+# Problem 5: JOIN
+
+I think joining two sets would be the same as taking their union - my intuition is to
+concatenate the two sets and then remove all duplicate entries, since sets can't have
+repeat entries in them. So use all the same code as I put in Problem 4 - Union.
+
+
+# Question A: MERGE
+
+I straight-up implemented union using merge sort, so I noticed that union and merge are
+very similar right away. Union is basically "merge without repeats", so I chose to merge
+first, then remove repeats from the merged set.
+
+I can modify my union code to more explicitly use the merge code as follows, assuming
+lst1 and lst2 have both been sorted using mergeSort:
+
+    def sorted_union(lst1,lst2):
+        idx1 = 0
+        idx2 = 0
+        union = []
+        while idx1 < len(lst1) and idx2 < len(lst2):
+            if lst1[idx1] == lst2[idx2]:
+                append lst1[idx1] to union, to add one copy of the repeated number
+                increment idx1 and idx2, to move past this repeated number
+            elif lst1[idx1] < lst2[idx2]:   # add a copy of the smaller number
+                append lst1[idx1] to union
+                increment idx1              # and increment that pointer
+            elif lst1[idx1] > lst2[idx2]:
+                append lst2[idx2] to union
+                increment idx2
+        return union + lst1[idx1:] + lst2[idx2:]
+
+Here we use the idea of two pointers pointing at each set and moving along it
+as we look for numbers which are identical, in which case we only add one copy
+of that number before we continue along the set. This is the same idea as in
+merge, when we use two pointers to move along the two sorted lists to merge them.
+
+The main change from the merge function is we have a special case to deal with
+if the numbers are the same in both lists, in which case we only append one of
+the numbers and then increment both pointers. Because the inputs are sets we can
+assume each of lst1 and lst2 have all unique numbers, so we don't have to worry
+about cases where incrementing the pointers will point to the same value.
+
+
+# Question B: IN-PLACE MERGE
+
+It is definitely possible to do in-place merge seeing as that was Leetcode problem #88,
+which I recently did for practice.
+
+In this example we iterate backwards along an "overall" array, lst1, which we are sorting
+lst2's items into. We use a pointer i for the lst1's numbers (which are the first
+m digits of lst1 in total, with the remainder n digits being 0's), a pointer j for
+lst2's numbers, and a pointer k for where we're moving in the grand scheme of lst1.
+As we compare each piece, if something from one array is bigger than the other,
+then we place that into the position k is pointing at and subtract one from the
+corresponding array's pointer (either i or j), then always subtract one from k
+(because a number must always be placed).
+
+    def merge(lst1, lst2):
+        # Note: lst1 has length m + n, where the first m digits are the numbers in lst1
+        # and the remaining n digits are 0's
+        # lst2 has length n
+        # Both lst1 and lst2 are already sorted from smallest to biggest
+
+        m = len(lst1) - len(lst2)
+        n = len(lst2)
+
+        # These are indices we use for our in-place merge
+        i = m-1
+        j = n-1
+        k = m+n-1
+        while j >= 0:
+            if i >= 0 and lst1[i] > lst2[j]:
+                lst1[k] = lst1[i]
+                i -= 1      # placed a number from nums1
+            else:
+                lst1[k] = lst2[j]
+                j -= 1      # placed a number from nums2
+            k -= 1          # always move pointer down
+        return lst1
+
+
+# Question C: PHONEBOOK
+
+Assuming the phonebooks are sorted, we can use the in-place merge described in Question B
+to merge them. This would be O(n) time, since we only have to look at each entry
+in each phonebook once, and would be O(n) space, since we only have to have an array/list
+the size of the two phonebooks put together for the final output.
+
+
+# Question D: REFLECTION
+(b) I was able to complete the assignment using my knowledge. I had to review a few
+    things and consider the questions carefully.
+
+    I had a lot of trouble with some of the recursion problems but after attending class
+on Monday I had a slightly better feel for what I was supposed to be doing. I still don't
+really understand why we would use recursion over iterative solutions in a lot of these examples.
