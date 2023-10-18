@@ -1,0 +1,36 @@
+def select(arr, k):    # k is n/2 rounded down
+
+    n = len(arr)
+
+    if n <= 5:
+   	 insertion sort arr     # (O(n) calls on sets of size O(1)
+   	 return the element in the kth position
+   	 
+    S = array of size n/5, each elt is an array 5 elt long
+
+    partition arr into subsets S[i], each 5 elts long; n/5 total subsets
+    
+    
+    # Create a list of medians of each subset
+    medians = []
+    for subset S[i] in S:
+   	 S[i] = insertion sort over the 5 elts
+   	 # insertion sort is very efficient for small sets
+   	 medians.append(median of each subset)
+    # now medians has a list of all the medians of each subset
+    
+    M = select(medians, n/10)   	 # calculates median of all the medians
+    
+    # Put the elts in arr into 3 groups based on value compared to M
+    lessM = all elts < M
+    equalM = all elts = M
+    greaterM = all elts > M
+    
+    # Check where the k index puts us: < M, = M, or > M
+    # If < M or > M, do another iteration to find true median
+    if k <= length of lessM:
+   	 return select( lessM, k )
+    elif k > (length of lessM + length of equalM):
+   	 return select( greaterM, k - len(lessM) - len(equalM )
+    else:
+   	 return M
