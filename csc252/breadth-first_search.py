@@ -1,5 +1,10 @@
 from collections import deque
 
+"""
+How to modify this code so that it finds the smallest path?
+What data structure to use, how to store a partial path?
+"""
+
 def test_graphs(option):
     graph = {}
     if option == "names":
