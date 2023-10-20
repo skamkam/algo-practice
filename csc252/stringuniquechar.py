@@ -46,10 +46,6 @@ def main():
         print("unique:      " + str(unique(test)))
         print("unique fast: "+ str(unique_fast(test)))
         print()
-    
-    string = "test"
-    string[0] = "a"
-    print(string)
 
 if __name__ == "__main__":
     main()
