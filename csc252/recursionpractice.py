@@ -20,12 +20,43 @@ def iter_fibonacci(n):  # starting at 1, 2, 3, 5, prints the nth fib num
         a = temp
     return a
 
-def string_permutation(str):
-    perms = []
-    for ch in str:
-        pass
-    
+def printPerms(letters, s=""):   # when calling, have letters, s defaults to ""
+    """
+    Input: String to be permutated
+    Output: Prints every permutation of that string, returns nothing
 
+    When calling, has input string letters; in internal recursions, calls using
+    the partially-permutated string. Uses linked list
+    """
+    if len(letters) == 0:       # base case
+        print(s)
+    else:
+        if len(s) == 0:
+            printPerms(letters[1:], letters[0])
+        else:
+            for i in range(len(s)+1): # at every spot in s, insert letters[0]
+                word = s[:i] + letters[0] + s[i:]
+                printPerms(letters[1:], word)
+    
+def getPerms(s):
+    """
+    Input: String
+    Returns: List of permutations of that string
+    """
+    p = []
+    if s == None or len(s) < 0:
+        return None
+    elif len(s) == 0:
+        p.append("")
+        return p
+    
+    f = s[0]    # first
+    r = s[1:]   # remaining
+    words = getPerms(r)     # words 
+    for w in words:     # for every word w in words
+        for i in range(len(w)+1):     # for length of w + 1, to allow insert at end of str
+            p.append(w[:i] + f + w[i:])
+    return p
 
 def parenthesis_match(str):
     count = 0
@@ -46,14 +77,16 @@ def parenthesis_match(str):
     return False
 
 
-
-
 print(parenthesis_match("(x+1-(y-1)"))
 
-print(factorial(5))
-print(fibonacci(5))
-print(iter_fibonacci(5))
-print(string_permutation("abc"))
+def main():
+    print(factorial(5))
+    print(fibonacci(5))
+    print(iter_fibonacci(5))
+    printPerms("abc")
+    print(getPerms("abc"))
+
+main()
 
 """
 9/25/23 notes
