@@ -36,8 +36,8 @@ def path_exists(graph, start_node, end_node):
     searched = []
     while search_queue:
         cur_node = search_queue.popleft()   # deque is "double ended queue"
-        # Only search this cur_node if you haven't already searched them.
-        if not cur_node in searched:
+        # Only search this cur_node if you haven't already searched it
+        if cur_node not in searched:
             if cur_node == end_node:
                 return True
             else:
