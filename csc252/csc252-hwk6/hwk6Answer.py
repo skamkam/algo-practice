@@ -90,11 +90,41 @@ def findBFSPath(graph:dict, start_node:str, end_node:str) -> list:
 
 
 def inOrderWalk(root:BTNode) -> list:
-    return None 
+    """
+    Write the function inOrderWalk(root:BTNode) -> list that walks or traverses
+    a tree in order (left, node, right) and returns the data elements in the tree in a list.
+    """
+    # how to tell if it's the base case?!
+    # recursive left, node, right... like DFS
+    if root == None:
+        return root
+    answers = [inOrderWalk(root.left), root, inOrderWalk(root.right)]
+    return answers
+    
+    
     
 def listToTree(tree_as_list:list) -> BTNode:
-    return None 
+    """
+    Given a sorted (increasing order) array, write the function
+    listToTree(tree_as_list:list) -> BTNode to create a binary search tree
+    with minimal height. Return the head of the tree.
+    """
+    def node_creator(lst:list) -> BTNode:
+        m = len(lst) // 2
+        l = m // 2
+        r = m + l
+        node = BTNode(lst[m])
+        if l != m:
+            node.left = node_creator(lst[:m])   # node creator on left half
+        if r != m:
+            node.right = node_creator(lst[m+1:])    # node creator on right half
+        print(node.data)
+        return node
+    
+    node_creator(tree_as_list)
+    return None
 
+    
 def fixTree(root:BTNode) -> BTNode:
     return None 
 

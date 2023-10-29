@@ -30,10 +30,14 @@ def main():
     ug_1 = convertDAGToUG(dag_graph)
     #print(findBFSPath(ug_1, "peggy", "you"))
 
-    print(findBFSPath( {"A": ["B", "C"], "B": [], "C": ["D"], "D": []}, "A", "D" ))
-    print(findBFSPath({}, "A", "B"))
-    print (findBFSPath( {"A": ["B", "C"], "B": [], "C": ["D"], "D": []}, "D", "A" ))
-    print(findBFSPath( {"A": ["B", "C"], "B": ["A"], "C": ["A"]}, "A", "C"))
+    #print(findBFSPath( {"A": ["B", "C"], "B": [], "C": ["D"], "D": []}, "A", "D" ))
+    #print(findBFSPath({}, "A", "B"))
+    #print (findBFSPath( {"A": ["B", "C"], "B": [], "C": ["D"], "D": []}, "D", "A" ))
+    #print(findBFSPath( {"A": ["B", "C"], "B": ["A"], "C": ["A"]}, "A", "C"))
+
+    #print(inOrderWalk(small_tree))
+    lst = [0,1,2,3,4,5,6,7]
+    print(listToTree(lst))
 
 
 if __name__ == "__main__":
