@@ -17,6 +17,7 @@ def getSmallTree() -> BTNode:
     root.right = BTNode(89)
     root.left.left = BTNode(45)
     root.left.right = BTNode(50)
+    return root
 
 def main():
     POL_helper()    #Test is hwk6Answer.py imported correctly.
@@ -35,9 +36,25 @@ def main():
     #print (findBFSPath( {"A": ["B", "C"], "B": [], "C": ["D"], "D": []}, "D", "A" ))
     #print(findBFSPath( {"A": ["B", "C"], "B": ["A"], "C": ["A"]}, "A", "C"))
 
-    #print(inOrderWalk(small_tree))
-    lst = [0,1,2,3,4,5,6,7]
-    print(listToTree(lst))
+    #print(convertDAGToUG( {'a': ['b'], 'b': []} ))
+
+    print(inOrderWalk(small_tree))
+    print()
+
+    lst = [0]
+    lst_tree_node = listToTree(lst)
+    lst_tree_node.printNode()
+    #print(inOrderWalk(lst_tree_node))
+    #print(listToTree([]))
+
+    root = BTNode(5)
+    root.left = BTNode(2)
+    root.right = BTNode(1)
+    root.left.left = BTNode(4)
+    print(inOrderWalk(root))
+    newroot = fixTree(root)
+    newroot.printNode()   # sorts and reorganizes tree
+    print(inOrderWalk(newroot))
 
 
 if __name__ == "__main__":

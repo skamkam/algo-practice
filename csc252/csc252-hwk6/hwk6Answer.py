@@ -1,3 +1,7 @@
+# Name: Sarah Kam
+# Peers: N/A
+# References: Class notes on quicksort, CLRS section on binary trees
+
 from collections import deque
 
 #### DO NOT EDIT - START ####
@@ -10,6 +14,8 @@ class BTNode:
         self.right = None
         self.data = data
 #### DO NOT EDIT - END ####
+    def printNode(self):
+        print(self.data)
 
 def convertDAGToUG(dag_graph:dict) -> dict:
     """
@@ -19,14 +25,10 @@ def convertDAGToUG(dag_graph:dict) -> dict:
     :param dag_graph: (dict) The directed acyclic graph
     :return : (dict) The converted undirected graph
 
-    >>> convertDAGToUG( {'a': ['b']} )
+    >>> convertDAGToUG( {'a': ['b'], 'b': []} )
     {'a': ['b'], 'b': ['a']}
     >>> convertDAGToUG( {} )
     {}
-    >>> convertDAGToUG( {'you': ['alice', 'bob'], 'bob': ['peggy'], 'alice': ['claire'],
-        'claire': ['tom', 'jonny'], 'peggy': [], 'tom': [], 'jonny': []} )
-    {'you': ['alice', 'bob'], 'alice': ['you', 'claire'], 'bob': ['you', 'peggy'], 'peggy': ['bob'], 
-    'claire': ['alice', 'tom', 'jonny'], 'tom': ['claire'], 'jonny': ['claire']}
     """
     ug = {}
     for node in dag_graph.keys():
@@ -91,42 +93,97 @@ def findBFSPath(graph:dict, start_node:str, end_node:str) -> list:
 
 def inOrderWalk(root:BTNode) -> list:
     """
-    Write the function inOrderWalk(root:BTNode) -> list that walks or traverses
-    a tree in order (left, node, right) and returns the data elements in the tree in a list.
-    """
-    # how to tell if it's the base case?!
-    # recursive left, node, right... like DFS
-    if root == None:
-        return root
-    answers = [inOrderWalk(root.left), root, inOrderWalk(root.right)]
-    return answers
+    Traverses a tree in order (L, N, R) and returns the data elements in the tree in a list.
+
+    :param root: (BTNode) The root of the tree to be traversed
+    :return : (list) A list of the data elements in the tree, traversed in order
     
+    >>> root = BTNode(5)
+    >>> root.left = BTNode(2)
+    >>> root.right = BTNode(1)
+    >>> root.left.left = BTNode(4)
+    >>> inOrderWalk(root)
+    [4, 2, 5, 1]
+    """
+    ans = []
+    if root.left != None:
+        for val in inOrderWalk(root.left):
+            ans.append(val)
+    ans.append(root.data)
+    if root.right != None:
+        for val in inOrderWalk(root.right):
+            ans.append(val)
+    return ans
     
     
 def listToTree(tree_as_list:list) -> BTNode:
     """
-    Given a sorted (increasing order) array, write the function
-    listToTree(tree_as_list:list) -> BTNode to create a binary search tree
-    with minimal height. Return the head of the tree.
+    Takes an ascending order sorted array and turns the values in the array into
+    a binary search tree, returning the root node
+
+    :param tree_as_list: (list) The list containing sorted values to be converted into a BST
+    :return : (BTNode) The root node of the BST created from tree_as_list
+
+    >>> listToTree([0,1,3,4,5,7,8,10])
+    BTNode(5)
+    >>> listToTree([])
+    None
+    >>> listToTree([0])
+    BTNode(0)
     """
-    def node_creator(lst:list) -> BTNode:
-        m = len(lst) // 2
-        l = m // 2
-        r = m + l
-        node = BTNode(lst[m])
-        if l != m:
-            node.left = node_creator(lst[:m])   # node creator on left half
-        if r != m:
-            node.right = node_creator(lst[m+1:])    # node creator on right half
-        print(node.data)
-        return node
-    
-    node_creator(tree_as_list)
-    return None
+    if len(tree_as_list) == 0:
+        return None
+    # reverse engineer binary search in a sorted array
+    m = len(tree_as_list) // 2
+    l = m // 2
+    r = (len(tree_as_list)+m) // 2
+    node = BTNode(tree_as_list[m])
+    if l < m:
+        node.left = listToTree(tree_as_list[:m])   # node creator on left half
+    if r > m:
+        node.right = listToTree(tree_as_list[m+1:])    # node creator on right half
+    return node
 
     
 def fixTree(root:BTNode) -> BTNode:
-    return None 
+    """
+    Given a binary tree of integers that are not sorted into a binary search tree,
+    sorts the tree into a binary search tree and returns the root node. Uses a helper
+    function, quicksort, to sort the unsorted tree's data into a sorted list.
+
+    :param root: (BTNode) The root of the unsorted tree
+    :return : (BTNode) The root of the sorted tree
+
+    >>> root = BTNode(5)
+    >>> root.left = BTNode(2)
+    >>> root.right = BTNode(1)
+    >>> root.left.left = BTNode(4)
+    >>> fixTree(root)   # original root is 5
+    BTNode(4)   # sorts and returns the sorted tree's root, 4
+    """
+    def quicksort(arr:list) -> list:
+        """
+        Performs quicksort on an input array
+
+        :param arr: (list) The input array to be sorted
+        :return : (list) The sorted output array
+
+        >>> quicksort([7,3,5,8,6])
+        [3,5,6,7,8]
+        >>> quicksort([])
+        []
+        """
+        if len(arr) < 2:    # base case
+            return arr
+        else:               # recursive case  
+            pivot = arr[0]      # choose the first elt as pivot
+            less = [i for i in arr[1:] if i <= pivot]
+            greater = [i for i in arr[1:] if i > pivot]
+            return quicksort(less) + [pivot] + quicksort(greater)
+    data = inOrderWalk(root)
+    sorteddata = quicksort(data)
+    return listToTree(sorteddata)
+
 
 def isBalanced(root:BTNode) -> bool:    
     return (maxDepth(root) - minDepth(root)) <= 1
