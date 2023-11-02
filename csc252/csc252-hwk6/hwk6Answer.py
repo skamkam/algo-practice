@@ -17,6 +17,26 @@ class BTNode:
     def printNode(self):
         print(self.data)
 
+def quicksort(arr:list) -> list:    # helper function for fixTree()
+    """
+    Performs quicksort on an input array
+
+    :param arr: (list) The input array to be sorted
+    :return : (list) The sorted output array
+
+    >>> quicksort([7,3,5,8,6])
+    [3,5,6,7,8]
+    >>> quicksort([])
+    []
+    """
+    if len(arr) < 2:    # base case
+        return arr
+    else:               # recursive case  
+        pivot = arr[0]      # choose the first elt as pivot
+        less = [i for i in arr[1:] if i <= pivot]
+        greater = [i for i in arr[1:] if i > pivot]
+        return quicksort(less) + [pivot] + quicksort(greater)
+
 def convertDAGToUG(dag_graph:dict) -> dict:
     """
     Converts a directed acyclic graph into an undirected graph by
@@ -161,25 +181,6 @@ def fixTree(root:BTNode) -> BTNode:
     >>> fixTree(root)   # original root is 5
     BTNode(4)   # sorts and returns the sorted tree's root, 4
     """
-    def quicksort(arr:list) -> list:
-        """
-        Performs quicksort on an input array
-
-        :param arr: (list) The input array to be sorted
-        :return : (list) The sorted output array
-
-        >>> quicksort([7,3,5,8,6])
-        [3,5,6,7,8]
-        >>> quicksort([])
-        []
-        """
-        if len(arr) < 2:    # base case
-            return arr
-        else:               # recursive case  
-            pivot = arr[0]      # choose the first elt as pivot
-            less = [i for i in arr[1:] if i <= pivot]
-            greater = [i for i in arr[1:] if i > pivot]
-            return quicksort(less) + [pivot] + quicksort(greater)
     data = inOrderWalk(root)
     sorteddata = quicksort(data)
     return listToTree(sorteddata)
