@@ -14,28 +14,6 @@ class BTNode:
         self.right = None
         self.data = data
 #### DO NOT EDIT - END ####
-    def printNode(self):
-        print("node's data is:", self.data)
-
-def quicksort(arr:list) -> list:    # helper function for fixTree()
-    """
-    Performs quicksort on an input array
-
-    :param arr: (list) The input array to be sorted
-    :return : (list) The sorted output array
-
-    >>> quicksort([7,3,5,8,6])
-    [3,5,6,7,8]
-    >>> quicksort([])
-    []
-    """
-    if len(arr) < 2:    # base case
-        return arr
-    else:               # recursive case  
-        pivot = arr[0]      # choose the first elt as pivot
-        less = [i for i in arr[1:] if i <= pivot]
-        greater = [i for i in arr[1:] if i > pivot]
-        return quicksort(less) + [pivot] + quicksort(greater)
 
 def convertDAGToUG(dag_graph:dict) -> dict:
     """
@@ -61,6 +39,8 @@ def convertDAGToUG(dag_graph:dict) -> dict:
                 ug[neighbor] = [node]       # make a neighbor node and put og node in val-list
             elif node not in ug[neighbor]:  # if neighbor exists and og isn't in, add
                 ug[neighbor].append(node)
+        if ug.get(node) == None:            # if atp node is still not added
+            ug[node] = []                   # it has no neighbors, so add node and value []
     return ug
 
 
@@ -77,12 +57,12 @@ def findBFSPath(graph:dict, start_node:str, end_node:str) -> list:
 
     >>> findBFSPath( {"A": ["B", "C"], "B": [], "C": ["D"], "D": []}, "A", "D" )
     ["A", "C", "D"]
-    >>> findBFSPath({}, "A", "B")
-    None
     >>> findBFSPath( {"A": ["B", "C"], "B": [], "C": ["D"], "D": []}, "D", "A" )
     None
-    >>> findBFSPath( {"A": ["B", "C"], "B": ["A"], "C": ["A"]}, "A", "C")
-    ["A", "C"]
+    >>> findBFSPath({}, "A", "B")
+    None
+    >>> findBFSPath( {"A": ["B", "C"], "B": ["A"], "C": ["A"]}, "C", "B")
+    ["C", "A", "B"]
     """
     if graph.get(start_node) == None or graph.get(end_node) == None:
         return None     # if start/end node isn't in the graph, return None
@@ -104,12 +84,12 @@ def findBFSPath(graph:dict, start_node:str, end_node:str) -> list:
                 return path
             else:
                 for n in graph[cur_node]:   # every neighbor
-                    search_queue.append(n)  # add to search_queue
-                    parents[n] = cur_node   # add the neighbor with the cur_node as parent
+                    if n not in searched:   # check if we've searched it yet
+                        search_queue.append(n)  # add to search_queue
+                        parents[n] = cur_node   # add the neighbor with the cur_node as parent
                 # Marks this cur_node as searched
                 searched.append(cur_node)
     return None
-
 
 def inOrderWalk(root:BTNode) -> list:
     """
@@ -164,6 +144,25 @@ def listToTree(tree_as_list:list) -> BTNode:
         node.right = listToTree(tree_as_list[m+1:])    # node creator on right half
     return node
 
+def quicksort(arr:list) -> list:    # helper function for fixTree()
+    """
+    Performs quicksort on an input array
+
+    :param arr: (list) The input array to be sorted
+    :return : (list) The sorted output array
+
+    >>> quicksort([7,3,5,8,6])
+    [3,5,6,7,8]
+    >>> quicksort([])
+    []
+    """
+    if len(arr) < 2:    # base case
+        return arr
+    else:               # recursive case  
+        pivot = arr[0]      # choose the first elt as pivot
+        less = [i for i in arr[1:] if i <= pivot]
+        greater = [i for i in arr[1:] if i > pivot]
+        return quicksort(less) + [pivot] + quicksort(greater)
     
 def fixTree(root:BTNode) -> BTNode:
     """
