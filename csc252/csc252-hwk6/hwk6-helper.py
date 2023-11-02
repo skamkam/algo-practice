@@ -16,7 +16,16 @@ def getSmallTree() -> BTNode:
     root.left = BTNode(34)
     root.right = BTNode(89)
     root.left.left = BTNode(45)
-    root.left.right = BTNode(50)
+    return root
+
+def getUnbalancedTree() -> BTNode:
+    root = BTNode(10)
+    root.left = BTNode(4)
+    root.left.left = BTNode(3)
+    root.left.right = BTNode(6)
+    root.left.left.left = BTNode(5)
+    root.left.left.left.right = BTNode(6)    
+    root.right = BTNode(3)
     return root
 
 def main():
@@ -51,11 +60,29 @@ def main():
     root.left = BTNode(2)
     root.right = BTNode(1)
     root.left.left = BTNode(4)
+    #root.left.left.left = BTNode(3)
     print(inOrderWalk(root))
     newroot = fixTree(root)
     newroot.printNode()   # sorts and reorganizes tree
     print(inOrderWalk(newroot))
 
+    print()
+    unbalanced = getUnbalancedTree()
+    print(isBalanced(unbalanced))
+
+    root = BTNode(1)
+    root.left = BTNode(2)
+    root.left.right = BTNode(3)
+    root.right = BTNode(6)
+    root.left.right.left = BTNode(3)
+    print(isBalanced(root))
+
+    root = BTNode(3)
+    root.left = BTNode(2)
+    root.right = BTNode(5)
+    root.right.left = BTNode(4)
+    print(minDepth(root))
+    print(maxDepth(root))
 
 
 if __name__ == "__main__":

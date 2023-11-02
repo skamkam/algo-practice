@@ -15,7 +15,7 @@ class BTNode:
         self.data = data
 #### DO NOT EDIT - END ####
     def printNode(self):
-        print(self.data)
+        print("node's data is:", self.data)
 
 def quicksort(arr:list) -> list:    # helper function for fixTree()
     """
@@ -185,8 +185,84 @@ def fixTree(root:BTNode) -> BTNode:
     sorteddata = quicksort(data)
     return listToTree(sorteddata)
 
+def maxDepth(node:BTNode) -> int:
+    """
+    Finds the maximum depth of a rooted tree, aka the length of the longest path to a leaf node
 
-def isBalanced(root:BTNode) -> bool:    
+    :param node: (BTNode) The node to check the depth of
+    :return : (int) The depth of that branch
+    
+    >>> root = BTNode(3)
+    >>> root.left = BTNode(2)
+    >>> root.right = BTNode(5)
+    >>> root.right.left = BTNode(4)
+    >>> maxDepth(root)
+    2   # the two leaf branches are, respectively, 1 deep and 2 deep; returns 2
+    """
+    if node.left == None and node.right == None:    # the node is a leaf node
+        return 0
+    else:
+        if node.left != None:
+            left_depth = 1 + maxDepth(node.left)
+        else:
+            left_depth = 0
+        if node.right != None:
+            right_depth = 1 + maxDepth(node.right)
+        else:
+            right_depth = 0
+        if left_depth > right_depth:
+            return left_depth
+        else:
+            return right_depth
+
+def minDepth(node:BTNode) -> int:
+    """
+    Finds the minimum depth of a rooted tree, aka the length of the shortest path to a leaf node
+
+    :param node: (BTNode) The node to check the depth of
+    :return : (int) The depth of that branch
+    
+    >>> root = BTNode(3)
+    >>> root.left = BTNode(2)
+    >>> root.right = BTNode(5)
+    >>> root.right.left = BTNode(4)
+    >>> minDepth(root)
+    1   # the two leaf branches are, respectively, 1 deep and 2 deep; returns 1
+    """
+    if node.left == None and node.right == None:    # the node is a leaf node
+        return 0
+    else:
+        if node.left != None and node.right != None:    # 2 kids
+            left_depth = 1 + minDepth(node.left)
+            right_depth = 1 + minDepth(node.right)
+            if left_depth < right_depth:
+                return left_depth
+            else:
+                return right_depth
+        elif node.right != None:    # only a right kid
+            return (1 + minDepth(node.right))
+        elif node.left != None:     # only a left kid
+            return (1 + minDepth(node.left))
+
+def isBalanced(root:BTNode) -> bool:
+    """
+    Checks if a binary tree is balanced, where a balanced tree is defined to be a tree
+    such that no two leaf nodes differ in distance from the root by more than one.    
+
+    :param root: (BTNode) The root of the binary tree we want to check
+    :return : (bool) Whether or not the binary tree is balanced
+
+    >>> root = BTNode(1)
+    >>> root.left = BTNode(2)
+    >>> root.left.right = BTNode(3)
+    >>> isBalanced(root)
+    True    # the only leaf node is root.left.right, so min and max depth are the same
+
+    >>> root.right = BTNode(6)      # continuing from previous tree
+    >>> root.left.right.left = BTNode(3)
+    >>> isBalanced(root)
+    False   # the two leaf nodes are root.right and root.left.right.left; min=1, max=3
+    """
     return (maxDepth(root) - minDepth(root)) <= 1
 
 def printTree(root:BTNode) -> None:
