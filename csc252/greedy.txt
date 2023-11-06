@@ -1,0 +1,35 @@
+Pseudocode for coloring in a map
+
+colors = ["red", "green", "blue", "yellow"]
+states = [list of all fifty states]
+queue = []
+checked = []
+while length of checked isn't the same as length of states:
+    if queue = 0:
+        choose a random state as the start state, add all its unchecked neighbors to the queue
+    add all of state's neighbors that haven't already been colored to the queue
+    check state.neighbors and record all of their colors (for all the already-colored neighbors)
+    assign state the lowest available color that isn't used in one of their neighbors
+
+
+Other versions:
+- random start, color neighbors, then neighbor's neighbors
+- start with state with most neighbors, then add neighbors to queue with a priority,
+    prioritizing the ones that have more neighbors
+- start with least neighbors, then ...
+
+
+
+Pseudocode for organizing classes
+Criteria:
+- class capacity vs classroom size
+- single block, cross-blocks (labs?)
+- num. requests per room
+- layout/pedagogical style
+- proximity to department
+- previous preference (have I, for the last 7 semesters, not got my first-choice room)
+
+Strategy:
+- which criteria are we going to be greedy about in our strategy?
+- optimize for class capacity vs classroom size, then second-layer optimization for preference
+- optimize for "blocks" of time? prioritize teachers that teach classes with strange blocks?
