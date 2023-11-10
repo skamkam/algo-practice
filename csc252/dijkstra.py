@@ -62,7 +62,7 @@ def run_dijkstra(graph:dict, start:str, finish:str) -> list:
 
 
 #Main:
-graph = {'start': {'a': 6, 'b': 2}, 'a': {'fin': 1}, 'b': {'a': 3, 'fin': 5}, 'fin': {}}
+graph = {'start': {'a': 6, 'b': 2}, 'a': {'fin': 1, 'start':2}, 'b': {'a': 5, 'fin': 5}, 'fin': {}}
 path = run_dijkstra(graph, 'start', 'fin')
 print("The shortest path is", path)
 graph2 = {'Book': {'LP': 5, 'Poster': 0}, 'LP': {'Bass': 15, 'Drum':20}, 'Poster': {'Bass':20, 'Drum':35}, 
