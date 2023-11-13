@@ -1,11 +1,17 @@
 # Name: Sarah Kam
 # Peers: N/A
 # References: https://github.com/geodatasource/country-borders: data for countries and their neighbors
-#       This data is according to ISO 3166, and some islands that are under other countries' rule
+#       This data is according to ISO 3166-1, and some islands that are under other countries' rule
 #       are treated as their own country (such as Aruba, which is a constituent country of the Netherlands)
 #   Pandas documentation on read_csv, itertuples
+#   https://towardsdatascience.com/visualizing-geospatial-data-in-python-e070374fe621 for mapping
+#   https://stackoverflow.com/questions/39578611/geopandas-attributeerror-multipolygon-object-has-no-attribute-exterior
+#       For fixing multipolygon error when trying to map
 
 import pandas as pd
+import geopandas as gpd
+import geoplot as gplt
+import json
 from collections import deque
 from random import choice as random_choice
 from time import time
@@ -30,17 +36,16 @@ def borders_to_neighbors(pd_data:pd.DataFrame) -> dict:
             AD              Andorra         FR                      France
             AD              Andorra         ES                      Spain
     >>> borders_to_neighbors(data)
-    {"AD": ["FR", "ES"]}
+    {"AD": ["FR", "SP"]}
     """
     neighbors = {}
-    # neighbors = {"AD": ["FR", "ES"]}
     for row in pd_data.itertuples(index=False, name=None):    # returns tuple of each row
         if row[0] not in neighbors.keys():      # creates a list at each country
             neighbors[row[0]] = []
         if not (pd.isnull(row[2])):     # checking for pandas null object if the country has no neighbors
-            neighbors[row[0]].append(row[2])    # neighbors["AD"] appends "FR"
+            neighbors[row[0]].append(row[2])
     return neighbors
-    
+
 
 def map_color_1(neighbors:dict) -> dict:
     """
@@ -50,44 +55,53 @@ def map_color_1(neighbors:dict) -> dict:
     :param neighbors: (dict) A dictionary of countries relating to a list of each of their neighbors
     :return : (dict) A dictionary of countries and the colors they've been assigned, encoded as 0, 1, 2, 3
 
-    >>> neighbors = {"AD": ["FR", "ES"], "FR": [], "ES": []} TODO: check what it actually does with this
-    {"AD": 0, "FR": 1, "ES": 2}     # alternatively {"AD": 0, "FR": 1, "ES": 1} works too
+    >>> TODO
     """
     queue = deque()
     country_colors = {}
-    # check the alphabetically first country in the list?
-    while len(neighbors) > 0:
+    n = len(neighbors)
+    while len(country_colors) < n:
         if len(queue) == 0:
             queue += [random_choice(list(neighbors))]    # returns a random country
         cur_country = queue.popleft()
 
-        poss_colors = [0,1,2,3]
+        taken_colors = set()
         for neighbor in neighbors[cur_country]:
-            print(neighbor)
-            if country_colors.get(neighbor) != None and country_colors[neighbor] in poss_colors:    # if neighbor has a color assigned already
-                poss_colors.remove( country_colors[neighbor] )     # remove whatever color
-                print("poss colors: ", poss_colors)
-
-        try:
-            country_colors[cur_country] = poss_colors[0]
-        except:
-            print("Method failed")
-            raise SystemExit
+            if neighbor == '':
+                pass
+            elif neighbor not in country_colors.keys():    # neighbor hasn't been assigned a color yet
+                if neighbor not in queue:     # and neighbor hasn't been queued yet or checked...
+                    queue += [neighbor]
+            else:
+                taken_colors.add(country_colors[neighbor])
         
-        for n in neighbors[cur_country]:        # add cur_country's neighbors to queue
-            if n not in country_colors.keys() and n not in queue:
-                queue += [n]
-        neighbors.pop(cur_country, None)        # remove current country from possible ones to check
+        poss_colors = ["red", "yellow", "green", "lightblue", "purple","lightgrey"]
+        for color in taken_colors:
+            poss_colors.remove(color)
+        country_colors[cur_country] = poss_colors[0]
+
     return country_colors
+
+def colors_to_csv(country_colors:dict) -> None:
+    """
+    Writes the country_colors dictionary to a csv file
+    """
+    with open("colors.csv", "w") as file:
+        file.write("Name,Color\n")
+        for k,v in country_colors.items():
+            file.write("{},{}\n".format(k,v))
+
 
 def main():
     start = time()
     # TODO: Fix this so the reading in data freaking works
     #data = pd.read_csv("countries.csv", header=0, delimiter = ",")
-    data = pd.read_csv(r"C:\Users\sarah\Documents\CodingStuff\algo-practice\csc252\csc252-hwk8\countries.csv")
+    data = pd.read_csv(r"C:\Users\sarah\Documents\CodingStuff\algo-practice\csc252\csc252-hwk8\countries.csv", keep_default_na=False)
     neighbors = borders_to_neighbors(data)
-    print(map_color_1(neighbors))
-    #print(len(neighbors)) 249 countries according to ISO 3166
+    print(neighbors)
+    colors = map_color_1(neighbors)
+    colors_to_csv(colors)
+
     print("Time taken: {} seconds".format(time() - start))
 
 main()
