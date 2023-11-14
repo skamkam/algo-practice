@@ -3,26 +3,13 @@
 # References: https://github.com/geodatasource/country-borders: data for countries and their neighbors
 #       This data is according to ISO 3166-1, and some islands that are under other countries' rule
 #       are treated as their own country (such as Aruba, which is a constituent country of the Netherlands)
-#   Pandas documentation on read_csv, itertuples
-#   https://towardsdatascience.com/visualizing-geospatial-data-in-python-e070374fe621 for mapping
-#   https://stackoverflow.com/questions/39578611/geopandas-attributeerror-multipolygon-object-has-no-attribute-exterior
-#       For fixing multipolygon error when trying to map
+#   Pandas documentation
 
 import pandas as pd
-import geopandas as gpd
-import geoplot as gplt
-import json
 from collections import deque
 from random import choice as random_choice
 from time import time
 
-"""
-1. Choose one of the following problems from the lecture notes: "Map Coloring", "Classroom Assignments", or "Traveling Salesperson".
-2. From your chosen problem, find or create a dataset of at least 50 elements with appropriate information. I strongly suggest you store this information as a .csv file.
-3. Read the data from step 2 into a Python program for analysis.
-4. Create functions for two different greedy strategies. For example, one strategy for the set-covering problem discussed in class was to "pick the station that covers the most states", but alternatively you could have "pick the state that is covered by the least stations".
-5. Create a main for the user to choose which strategy to run and communicate the output in a readable way (either through another .csv file or on the console output).
-"""
 def borders_to_neighbors(pd_data:pd.DataFrame) -> dict:
     """
     Takes in a dataframe containing countries and each of their neighbors and turns
@@ -49,18 +36,22 @@ def borders_to_neighbors(pd_data:pd.DataFrame) -> dict:
 
 def map_color_1(neighbors:dict) -> dict:
     """
-    Takes in a dictionary of countries and their neighbors and assigns 1 of 4 colors to all
-    of them such that no country and its neighbor have the same color
+    Takes in a dictionary of countries and their neighbors and uses up to 5 colors to color
+    the countries such that no country and its neighbor have the same color.
+    Chooses a random country as a "seed" for neighbors, then networks across all associated
+    neighbors in a BFS-like search until there are no more neighbors; then if not all countries
+    have colors yet, choose a random un-colored country as a new "seed" and repeats.
 
     :param neighbors: (dict) A dictionary of countries relating to a list of each of their neighbors
-    :return : (dict) A dictionary of countries and the colors they've been assigned, encoded as 0, 1, 2, 3
+    :return : (dict) A dictionary of countries and the colors they've been assigned, encoded as 0, 1, 2, 3, 4
 
-    >>> TODO
+    >>> map_color_1({"AD": ["FR", "SP"], "FR": [""], "SP": [""]})
+    {"AD": 0, "FR": 1, "SP": 2}
     """
     queue = deque()
-    country_colors = {}
+    colors = {}
     n = len(neighbors)
-    while len(country_colors) < n:
+    while len(colors) < n:
         if len(queue) == 0:
             queue += [random_choice(list(neighbors))]    # returns a random country
         cur_country = queue.popleft()
@@ -69,38 +60,66 @@ def map_color_1(neighbors:dict) -> dict:
         for neighbor in neighbors[cur_country]:
             if neighbor == '':
                 pass
-            elif neighbor not in country_colors.keys():    # neighbor hasn't been assigned a color yet
+            elif neighbor not in colors.keys():    # neighbor hasn't been assigned a color yet
                 if neighbor not in queue:     # and neighbor hasn't been queued yet or checked...
                     queue += [neighbor]
             else:
-                taken_colors.add(country_colors[neighbor])
+                taken_colors.add(colors[neighbor])
         
-        poss_colors = ["red", "yellow", "green", "lightblue", "purple","lightgrey"]
-        for color in taken_colors:
-            poss_colors.remove(color)
-        country_colors[cur_country] = poss_colors[0]
+        i = 0
+        while i in taken_colors:
+            i += 1
+        colors[cur_country] = i
 
-    return country_colors
+    return colors
 
-def colors_to_csv(country_colors:dict) -> None:
+def map_color_2(neighbors:dict) -> dict:
     """
-    Writes the country_colors dictionary to a csv file
+    Takes in a dictionary of countries and their neighbors and uses up to 6 colors to color
+    the countries such that no country and its neighbor have the same color.
+    Chooses a random country to color, checks its neighbors, colors it the lowest possible
+    number that its neighbors aren't colored with, chooses another random country and repeats.
+
+    :param neighbors: (dict) A dictionary of countries relating to a list of each of their neighbors
+    :return : (dict) A dictionary of countries and the colors they've been assigned, encoded as 0, 1, 2, 3, 4, 5
+    
+    >>> map_color_2({"AD": ["FR", "SP"], "FR": [""], "SP": [""]})
+    {"AD": 0, "FR": 1, "SP": 2}
     """
-    with open("colors.csv", "w") as file:
+    colors = {}
+    for cur_country in neighbors:
+        taken_colors = []
+        for neighbor in neighbors[cur_country]:
+            if colors.get(neighbor) != None:
+                taken_colors.append(colors[neighbor])
+        i = 0
+        while i in taken_colors:
+            i+=1
+        colors[cur_country] = i
+    return colors
+
+
+def colors_to_csv(country_colors:dict, filename:str) -> None:
+    """
+    Writes the country_colors dictionary to a csv file, readable by R program for visualization
+    """
+    with open("{}.csv".format(filename), "w") as file:
         file.write("Name,Color\n")
         for k,v in country_colors.items():
             file.write("{},{}\n".format(k,v))
 
-
 def main():
     start = time()
-    # TODO: Fix this so the reading in data freaking works
-    #data = pd.read_csv("countries.csv", header=0, delimiter = ",")
-    data = pd.read_csv(r"C:\Users\sarah\Documents\CodingStuff\algo-practice\csc252\csc252-hwk8\countries.csv", keep_default_na=False)
-    neighbors = borders_to_neighbors(data)
-    print(neighbors)
-    colors = map_color_1(neighbors)
-    colors_to_csv(colors)
+    data = pd.read_csv("countries.csv", keep_default_na=False)      # read in country borders csv
+    neighbors = borders_to_neighbors(data)      # turn country borders to dictionary-encoded graph
+
+    choice = input("Would you like map coloring option 1 or option 2? Type 1 or 2: ")
+    if choice == "1":
+        colors1 = map_color_1(neighbors)
+        colors_to_csv(colors1, "color1")
+    elif choice == "2":
+        colors2 = map_color_2(neighbors)
+        colors_to_csv(colors2, "color2")
 
     print("Time taken: {} seconds".format(time() - start))
 

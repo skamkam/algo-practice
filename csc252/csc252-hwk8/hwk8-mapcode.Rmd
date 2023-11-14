@@ -9,23 +9,55 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=F}
 library(sf)
 library(tidyverse)
 library(maps)
 ```
 
-```{r}
+```{r, echo=F, warning=F}
 data(iso3166)   # saves iso3166 encoding of a2, a3, mapnames, regionnames
 world_coordinates <- map_data("world")   # map data of world in point form
-colors <- read_csv("colors.csv") %>%  # color data from my coloring program
+```
+
+```{r, echo=F, warning=F}
+# First map: Map coloring function 1, 4 colors used
+color1_4col <- read_csv("color1_4col.csv") %>%  # color data from my coloring program
   mutate(a2 = Name) %>% 
   inner_join(iso3166,by="a2") %>% 
-  mutate(region=mapname)
-world_map <- world_coordinates %>% 
-  left_join(colors, by="region")
+  mutate(region=mapname, C = as.character(Color))
+
+world_map_1 <- world_coordinates %>% 
+  left_join(color1_4col, by="region")
 
 ggplot() +
-  geom_map(data=world_map, map=world_map, aes(long,lat,map_id=region, fill=Color))
+  geom_map(data=world_map_1, map=world_map_1, aes(long,lat,map_id=region, fill=C))
+```
 
+```{r, echo=F, warning=F}
+# Second map: Map coloring function 1, 5 colors used
+color1_5col <- read_csv("color1_5col.csv") %>%  # color data from my coloring program
+  mutate(a2 = Name) %>% 
+  inner_join(iso3166,by="a2") %>% 
+  mutate(region=mapname, C = as.character(Color))
+
+world_map_2 <- world_coordinates %>% 
+  left_join(color1_5col, by="region")
+
+ggplot() +
+  geom_map(data=world_map_2, map=world_map_2, aes(long,lat,map_id=region, fill=C))
+```
+
+```{r, echo=F, warning=F}
+# Third map: Map coloring function 2, 6 colors used
+color2_6col <- read_csv("color2_6col.csv") %>%  # color data from my coloring program
+  mutate(a2 = Name) %>% 
+  inner_join(iso3166,by="a2") %>% 
+  mutate(region=mapname, C = as.character(Color))
+
+world_map_3 <- world_coordinates %>% 
+  left_join(color2_6col, by="region")
+
+ggplot() +
+  geom_map(data=world_map_3, map=world_map_3, aes(long,lat,map_id=region, fill=C))
 ```
