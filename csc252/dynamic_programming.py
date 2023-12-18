@@ -123,6 +123,32 @@ def calculate_knapsack(items, values, weights, max_weight):
     return knapsack(row_len-1, col_len-1)
 
 
+def printEnglishNumber(n:int) -> None:
+    """
+    Given an integer between 0 and 999,999, prints the English phrase that describes that integer
+
+    :param n: (int) the input integer
+    :return : (None) Prints the English phrase and doesn't return anything
+
+    >>> printEnglishNumber(1)
+    One
+    >>> printEnglishNumber(231231)
+    Two Hundred Thirty One Thousand, Two Hundred Thirty One
+    """
+    arr = [""] * 6
+    for i in range(0,7):
+        arr[i] = n % 10^i   # break digits of n into the array
+    for j in range(len(arr)):
+        pass
+    # how to parse 10-1 as "eleven"?
+    # relationship of each number is taken in context of the groups of 3
+    # each group of 3 is said the same: 231231 is two hundred thirty one (thousand), two hundred thirty one
+    # all hundreds are the same
+    # teens are the problem
+    # twenty thirty fourty fifty sixty seventy eighty ninety -> "ty" at end can put that into ones
+
+
+
 def main():
     str1 = "monkeys"
     str2 = "dumkey is sus????"
